@@ -2,7 +2,6 @@ import streamlit as st
 import random
 import string
 import re
-import pyperclip
 
 # App set up
 st.set_page_config(page_title="Password Strength Meter")
@@ -74,38 +73,14 @@ def main():
             feedback = check_password_strength(password)
             for line in feedback:
                 st.write(line)
-               
-        
-    if st.button("Generate Strong Password"): 
-        # Store the generated password in session state
+
+
+    if st.button("Generate Strong Password"):
         st.session_state['generated_password'] = generate_strong_password()
-
-        # Use Streamlit columns to place the copy button next to the password
-        col1, col2 = st.columns([1, 1])  # Create two columns
-
-        with col1:
-            # Display the generated password in markdown
-            st.markdown(f"**Suggested Strong Password:** `{st.session_state['generated_password']}`", unsafe_allow_html=True)
-
-        with col2:
-            # Copy to clipboard with JavaScript
-            copy_button = st.button("🗎", key="copy_button")
-            if copy_button:
-                # Use JavaScript to copy the content of the text area
-                js_code = f"""
-                <script>
-                navigator.clipboard.writeText("{st.session_state['generated_password']}").then(function() {{
-                    alert('✅ Copied to clipboard!');
-                }}, function(err) {{
-                    alert('❌ Failed to copy: ' + err);
-                }});
-                </script>
-                """
-                st.markdown(js_code, unsafe_allow_html=True)
-
+        st.markdown(f"**Suggested Strong Password:** <span style=\"color:blue;\">Copy it!</span>", unsafe_allow_html=True)
+        st.code(st.session_state['generated_password'], language="plaintext")  # Display password in a code block
         st.info("💡 Use this generated password or create one with similar complexity.")
 
-    
 # Run the app
 if __name__ == "__main__":
     main()
